@@ -23,10 +23,10 @@ async function performQuery(jsonQuery: string): Promise<QueryResponse | undefine
 
 export async function bech32ToIcns(address: string): Promise<string | undefined> {
     const jsonQuery: string = `{"primary_name": {"address": "${address}"}}`;
-    const data: QueryResponse | undefined = await performQuery(jsonQuery);
+    const convertAddress: QueryResponse | undefined = await performQuery(jsonQuery);
 
-    if (data) {
-        const result: string | undefined = data.data.name;
+    if (convertAddress) {
+        const result: string | undefined = convertAddress.data.name;
         console.log(result);
         return result;
     }
@@ -34,10 +34,10 @@ export async function bech32ToIcns(address: string): Promise<string | undefined>
 
 export async function icnsToBech32(icns: string): Promise<string | undefined> {
     const jsonQuery: string = `{"address_by_icns": {"icns": "${icns}"}}`;
-    const data: QueryResponse | undefined = await performQuery(jsonQuery);
+    const convertAddress: QueryResponse | undefined = await performQuery(jsonQuery);
     
-    if (data) {
-        const result: string | undefined = data.data.bech32_address;
+    if (convertAddress) {
+        const result: string | undefined = convertAddress.data.bech32_address;
         console.log(result);
         return result;
     }
