@@ -1,4 +1,5 @@
 # ICNS-naming
+Inter Chain Name Service
 
 ## Introduction
 Welcome to the ICNS-naming documentation! 
