@@ -1,4 +1,4 @@
-import { bech32ToIcns, icnsToBech32 } from '../src/index';  // Please adjust the import path according to your project structure
+import { bech32ToIcns, icnsToBech32 } from '../src/index'; 
 
 describe('bech32ToIcns', () => {
   it('returns name when given a valid address', async () => {

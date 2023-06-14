@@ -1,15 +1,27 @@
 {
   "name": "icns-naming",
   "version": "1.0.0",
-  "description": "",
+  "description": "ICNS naming",
   "main": "index.ts",
   "scripts": {
     "test": "jest",
     "start": "ts-node src/index.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "cosmos",
+    "icns",
+    "bech32",
+    "address naming"
+  ],
+  "author": {
+    "name": "Andy Taewan Kim",
+    "url": "https://github.com/yuhatown/icns-naming"
+},
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yuhatown/icns-naming/issues",
+    "email": "yuhatown@gmail.com"
+},
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/dotenv": "^8.2.0",
