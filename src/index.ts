@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-dotenv.config();
+
+const RESOLVER_ADDRESS='osmo1xk0s8xgktn9x5vwcgtjdxqzadg88fgn33p8u9cnpdxwemvxscvast52cdd'
 
 interface QueryResponse {
     data: {
@@ -11,7 +11,7 @@ interface QueryResponse {
 
 async function performQuery(jsonQuery: string): Promise<QueryResponse | undefined> {
     const base64: string = Buffer.from(jsonQuery).toString('base64');
-    const finallyQuery: string = `https://lcd-osmosis.keplr.app/cosmwasm/wasm/v1/contract/${process.env.RESOLVER_ADDRESS}/smart/${base64}`;
+    const finallyQuery: string = `https://lcd-osmosis.keplr.app/cosmwasm/wasm/v1/contract/${RESOLVER_ADDRESS}/smart/${base64}`;
 
     try {
         const response = await fetch(finallyQuery);
