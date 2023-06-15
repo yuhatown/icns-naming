@@ -1,6 +1,9 @@
 import { bech32ToICNS, ICNSToBech32 } from '../src/index';  
 import fetchMock from 'jest-fetch-mock';
 
+afterEach(() => {
+    fetchMock.resetMocks();
+  });
 
 describe('bech32ToICNS', () => {
   it('should return the correct name', async () => {
@@ -9,8 +12,12 @@ describe('bech32ToICNS', () => {
         name: 'dogemos.osmo'
       }
     };
+    const bech32_address = 'osmo1z98eg2ztdp2glyla62629nrlvczg8s7f8sgpm5'
+    const resolver_address = 'osmo1xk0s8xgktn9x5vwcgtjdxqzadg88fgn33p8u9cnpdxwemvxscvast52cdd'
+
+
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
-    const result = await bech32ToICNS('osmo1z98eg2ztdp2glyla62629nrlvczg8s7f8sgpm5');
+    const result = await bech32ToICNS(bech32_address, resolver_address);
     console.log(result);
     
     expect(result).toEqual('dogemos.osmo');
@@ -24,8 +31,12 @@ describe('ICNSToBech32', () => {
         bech32_address: 'osmo1z98eg2ztdp2glyla62629nrlvczg8s7f8sgpm5'
       }
     };
+    const icns_address = 'dogemos.osmo'
+    const resolver_address = 'osmo1xk0s8xgktn9x5vwcgtjdxqzadg88fgn33p8u9cnpdxwemvxscvast52cdd'
+
+
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
-    const result = await ICNSToBech32('dogemos.osmo');
+    const result = await ICNSToBech32(icns_address, resolver_address);
     expect(result).toEqual('osmo1z98eg2ztdp2glyla62629nrlvczg8s7f8sgpm5');
   });
 });

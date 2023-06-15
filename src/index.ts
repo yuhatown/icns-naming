@@ -1,49 +1,52 @@
 import fetch from 'node-fetch';
 
-const RESOLVER_ADDRESS='osmo1xk0s8xgktn9x5vwcgtjdxqzadg88fgn33p8u9cnpdxwemvxscvast52cdd'
-
-interface QueryResponse {
+interface ICNSResponse {
     data: {
-        name?: string;
-        bech32_address?: string;
+        name: string;
     }
 }
 
-async function performQuery(jsonQuery: string): Promise<QueryResponse | undefined> {
-    const base64: string = Buffer.from(jsonQuery).toString('base64');
-    const finallyQuery: string = `https://lcd-osmosis.keplr.app/cosmwasm/wasm/v1/contract/${RESOLVER_ADDRESS}/smart/${base64}`;
+interface Bech32Response {
+    data: {
+        bech32_address: string;
+    }
+}
 
-    try {
-        const response = await fetch(finallyQuery);
+type QueryResponse = ICNSResponse | Bech32Response;
 
-        if (!response.ok) {
-            console.error(`HTTP Error Response: ${response.status} ${response.statusText}`);
-            return undefined;
+async function performQuery(queryObject: object, resolverAddress: string): Promise<QueryResponse | undefined> {
+    const base64: string = Buffer.from(JSON.stringify(queryObject)).toString('base64');
+    const finallyQuery: string = `https://lcd-osmosis.keplr.app/cosmwasm/wasm/v1/contract/${resolverAddress}/smart/${base64}`;
+
+    const response = await fetch(finallyQuery);
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error Response: ${response.status} ${response.statusText}`);
+    }
+
+    const data: QueryResponse = await response.json() as QueryResponse;
+
+    return data;
+}
+
+async function queryAndExtractField(queryObject: object, resolverAddress: string): Promise<string | undefined> {
+    const convertAddress = await performQuery(queryObject, resolverAddress);
+
+    if (convertAddress) {
+        if ('name' in convertAddress.data) {
+            return convertAddress.data.name;
         }
-        const data: QueryResponse = await response.json() as QueryResponse;
-
-        return data;
-    } catch (error: any) {
-        console.error(`Failed to perform query: ${error}`);
+        if ('bech32_address' in convertAddress.data) {
+            return convertAddress.data.bech32_address;
+        }
     }
 }
 
-export async function bech32ToICNS(address: string): Promise<string | undefined> {
-    const jsonQuery: string = `{"primary_name": {"address": "${address}"}}`;
-    const convertAddress: QueryResponse | undefined = await performQuery(jsonQuery);
-
-    if (convertAddress) {
-        const result: string | undefined = convertAddress.data.name;
-        return result;
-    }
+export function bech32ToICNS(address: string, resolverAddress: string): Promise<string | undefined> {
+    return queryAndExtractField({ "primary_name": { "address": address } }, resolverAddress);
 }
 
-export async function ICNSToBech32(icns: string): Promise<string | undefined> {
-    const jsonQuery: string = `{"address_by_icns": {"icns": "${icns}"}}`;
-    const convertAddress: QueryResponse | undefined = await performQuery(jsonQuery);
-    
-    if (convertAddress) {
-        const result: string | undefined = convertAddress.data.bech32_address;
-        return result;
-    }
+export function ICNSToBech32(icns: string, resolverAddress: string): Promise<string | undefined> {
+    return queryAndExtractField({ "address_by_icns": { "icns": icns } }, resolverAddress);
 }
+
