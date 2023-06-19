@@ -5,6 +5,7 @@
   "description": "ICNS naming",
   "main": "dist/index.js",
   "scripts": {
+    "prepack": "npm run build",
     "build": "npm run build:tsc",
     "build:tsc": "tsc",
     "test": "jest",
@@ -31,7 +32,7 @@
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.4",
-    "node-fetch": "^3.3.1"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.5",
