@@ -1,6 +1,6 @@
 {
   "name": "icns-naming",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "ICNS naming",
   "main": "dist/index.js",
