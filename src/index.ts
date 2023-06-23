@@ -15,13 +15,14 @@ interface Bech32Response {
 type QueryResponse = ICNSResponse | Bech32Response;
 
 async function performQuery(
+  baseUrl: string,
   queryObject: object,
   resolverAddress: string
 ): Promise<QueryResponse | undefined> {
   const base64: string = Buffer.from(JSON.stringify(queryObject)).toString(
     "base64"
   );
-  const finallyQuery: string = `https://lcd-osmosis.keplr.app/cosmwasm/wasm/v1/contract/${resolverAddress}/smart/${base64}`;
+  const finallyQuery: string = `${baseUrl}${resolverAddress}/smart/${base64}`;
 
   const response = await fetch(finallyQuery);
 
@@ -37,10 +38,15 @@ async function performQuery(
 }
 
 async function queryAndExtractField(
+  baseUrl: string,
   queryObject: object,
   resolverAddress: string
 ): Promise<string | undefined> {
-  const convertAddress = await performQuery(queryObject, resolverAddress);
+  const convertAddress = await performQuery(
+    baseUrl,
+    queryObject,
+    resolverAddress
+  );
 
   if (convertAddress) {
     if ("name" in convertAddress.data) {
@@ -53,20 +59,24 @@ async function queryAndExtractField(
 }
 
 export function bech32ToICNS(
+  baseUrl: string,
   address: string,
   resolverAddress: string
 ): Promise<string | undefined> {
   return queryAndExtractField(
+    baseUrl,
     { primary_name: { address: address } },
     resolverAddress
   );
 }
 
 export function ICNSToBech32(
+  baseUrl: string,
   icns: string,
   resolverAddress: string
 ): Promise<string | undefined> {
   return queryAndExtractField(
+    baseUrl,
     { address_by_icns: { icns: icns } },
     resolverAddress
   );
