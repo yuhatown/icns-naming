@@ -8,7 +8,7 @@
     "prepack": "npm run build",
     "build": "npm run build:tsc",
     "build:tsc": "tsc",
-    "test": "jest",
+    "test": "jest --config jest.config.cjs",
     "start": "ts-node src/index.ts"
   },
   "export": {
