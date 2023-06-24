@@ -1,10 +1,6 @@
 import { bech32ToICNS, ICNSToBech32 } from "../src/index";
 import fetchMock from "jest-fetch-mock";
 
-afterEach(() => {
-  fetchMock.resetMocks();
-});
-
 describe("bech32ToICNS", () => {
   it("should return the correct name", async () => {
     const mockResponse = {
